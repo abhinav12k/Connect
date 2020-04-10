@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "168927210888",
+    "firebase_url": "https://connect-81727.firebaseio.com",
+    "project_id": "connect-81727",
+    "storage_bucket": "connect-81727.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168927210888:android:9cd78dfc406fe12a115e3d",
+        "android_client_info": {
+          "package_name": "com.mass.connect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "168927210888-4odsigh1279ilvu0kmsa230b7auicpl4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mass.connect",
+            "certificate_hash": "b782471345f6876aec183fa02fecf67bae238a6d"
+          }
+        },
+        {
+          "client_id": "168927210888-prod7h68it0v4g5k188kvgrduept4rd2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAL9kcsLJnUe3jZ1Q1NSc0TYzjFAF40GE4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "168927210888-prod7h68it0v4g5k188kvgrduept4rd2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
