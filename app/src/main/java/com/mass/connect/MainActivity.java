@@ -3,13 +3,17 @@ package com.mass.connect;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TableLayout;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -18,11 +22,22 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Toolbar mToolbar;
 
+    private ViewPager mviewPager;
+    private SectionsPageAdapter mSectionPageAdapter;
+    private TabLayout mTabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+
+        mviewPager = findViewById(R.id.tab_pager);
+        mSectionPageAdapter = new SectionsPageAdapter(getSupportFragmentManager());
+
+        mviewPager.setAdapter(mSectionPageAdapter);
+        mTabLayout = findViewById(R.id.main_tabs);
+        mTabLayout.setupWithViewPager(mviewPager);
 
         mToolbar =findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
