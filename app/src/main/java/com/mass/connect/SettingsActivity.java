@@ -3,7 +3,10 @@ package com.mass.connect;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +29,9 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView mName;
     private TextView mStatus;
 
+    private Button changeImageBtn;
+    private Button changeStatusBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +40,8 @@ public class SettingsActivity extends AppCompatActivity {
         //layout components
         mName = findViewById(R.id.settings_name);
         mStatus = findViewById(R.id.settings_status);
+        changeImageBtn = findViewById(R.id.settings_image_btn);
+        changeStatusBtn = findViewById(R.id.settings_status_btn);
 
         //setting up firebase
         mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -59,6 +67,17 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        changeStatusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String status_value = mStatus.getText().toString();
+                Intent status_intent = new Intent(SettingsActivity.this,StatusActivity.class);
+                status_intent.putExtra("status_value",status_value);
+                startActivity(status_intent);
             }
         });
 
