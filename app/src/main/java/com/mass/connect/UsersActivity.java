@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -58,6 +60,19 @@ public class UsersActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users users) {
                 holder.setName(users.getName());
                 holder.setStatus(users.getStatus());
+                holder.setUserImage(users.getThumbimage());
+
+                final String user_id = getRef(position).getKey();
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent profileIntent = new Intent(UsersActivity.this,ProfileActivity.class);
+                        profileIntent.putExtra("user_id",user_id);
+                        startActivity(profileIntent);
+                    }
+                });
+
+
             }
 
             @NonNull
@@ -94,10 +109,17 @@ public class UsersActivity extends AppCompatActivity {
             user_status.setText(status);
         }
 
-        public void setProfilePic(String profilePic){
+//        public void setProfilePic(String profilePic){
+//            //actual profile image not compressed
+//            user_profilePic = mView.findViewById(R.id.mProfileImage);
+//            Picasso.get().load(profilePic).placeholder(R.drawable.default_avatar).into(user_profilePic);
+//        }
+
+        public void setUserImage(String thumb_image){
             user_profilePic = mView.findViewById(R.id.mProfileImage);
-//            user_profilePic.setImageBitmap();
+            Picasso.get().load(thumb_image).placeholder(R.drawable.default_avatar).into(user_profilePic);
         }
+
     }
 
 }

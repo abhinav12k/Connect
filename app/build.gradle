@@ -52,5 +52,6 @@ dependencies {
 
     // FirebaseUI for Cloud Storage
     implementation 'com.firebaseui:firebase-ui-storage:6.2.1'
+    implementation 'id.zelory:compressor:2.1.0'
 
 }
