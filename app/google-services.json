@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "168927210888-ued0holrpvacib7e99lea5oqoup2ag7h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mass.connect",
+            "certificate_hash": "6e0bf9f72d057934455cb84b35b76bd527d28c99"
+          }
+        },
+        {
           "client_id": "168927210888-4odsigh1279ilvu0kmsa230b7auicpl4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
