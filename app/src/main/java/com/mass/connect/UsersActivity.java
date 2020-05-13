@@ -36,6 +36,7 @@ public class UsersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_users);
 
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mUsersDatabase.keepSynced(true);
 
         mToolbar = findViewById(R.id.users_toolbar);
         setSupportActionBar(mToolbar);
@@ -87,7 +88,7 @@ public class UsersActivity extends AppCompatActivity {
         firebaseRecyclerAdapter.startListening();
     }
 
-    public static class UsersViewHolder extends RecyclerView.ViewHolder{
+    public class UsersViewHolder extends RecyclerView.ViewHolder{
 
         private View mView;
         private TextView user_name;

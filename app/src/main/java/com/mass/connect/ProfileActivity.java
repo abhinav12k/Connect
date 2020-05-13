@@ -89,11 +89,15 @@ public class ProfileActivity extends AppCompatActivity {
 
                 Picasso.get().load(image).placeholder(R.drawable.default_avatar).into(mProfileImage);
 
+                // *****************************Friend list/ Request Feature******************************
+
                 mFriendReqDatabase.child(mCurrent_user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                         if (dataSnapshot.hasChild(user_id)) {
+
+                            //means either the friend request is received or we have we sent that so updating the respective buttons
 
                             String req_type = dataSnapshot.child(user_id).child("request_type").getValue().toString();
 
@@ -108,11 +112,36 @@ public class ProfileActivity extends AppCompatActivity {
                                 mProfileSendReqBtn.setText("Cancel Friend Request");
 
                             }
+                            mProgressDialog.dismiss();
+
+                        } else {
+
+                            //checking that the person is already a friend or not
+
+                            mFriendDatabase.child(mCurrent_user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                    if (dataSnapshot.hasChild(user_id)) {
+
+                                        mCurrent_state = "friends";
+                                        mProfileSendReqBtn.setText("Unfriend" + " " + display_name[0]);
+                                        mProgressDialog.dismiss();
+
+                                    }
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    mProgressDialog.dismiss();
+                                }
+                            });
 
 
                         }
 
-                        mProgressDialog.dismiss();
+
                     }
 
                     @Override
@@ -120,7 +149,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                     }
                 });
-
+                mProgressDialog.dismiss();
             }
 
             @Override
@@ -163,7 +192,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     mProfileSendReqBtn.setEnabled(true);
                                 }
                             });
-
+                    mProgressDialog.dismiss();
                 }
 
                 // ------------------Cancel Friend req state ---------------------------
@@ -183,16 +212,16 @@ public class ProfileActivity extends AppCompatActivity {
                             });
                         }
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            e.printStackTrace();
-                            mProfileSendReqBtn.setEnabled(true);
-                            Toast.makeText(ProfileActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    e.printStackTrace();
+                                    mProfileSendReqBtn.setEnabled(true);
+                                    Toast.makeText(ProfileActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
-
+                    mProgressDialog.dismiss();
                 }
 
                 // ------------------Request received state ---------------------------
@@ -217,7 +246,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                                                             mProfileSendReqBtn.setEnabled(true);
                                                             mCurrent_state = "friends";
-                                                            mProfileSendReqBtn.setText("Unfriend" +" " +display_name[0]);
+                                                            mProfileSendReqBtn.setText("Unfriend" + " " + display_name[0]);
 
                                                         }
                                                     });
@@ -230,7 +259,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 }
                             });
 
-
+                    mProgressDialog.dismiss();
                 }
 
 
