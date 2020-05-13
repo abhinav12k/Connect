@@ -80,7 +80,38 @@ public class ProfileActivity extends AppCompatActivity {
 
                 Picasso.get().load(image).placeholder(R.drawable.default_avatar).into(mProfileImage);
 
-                mProgressDialog.dismiss();
+                mFriendReqDatabase.child(mCurrent_user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        if(dataSnapshot.hasChild(user_id)){
+
+                            String req_type = dataSnapshot.child(user_id).child("request_type").getValue().toString();
+
+                            if(req_type.equals("received")){
+
+                                mCurrent_state = "req_received";
+                                mProfileSendReqBtn.setText("Accept Friend Request");
+
+                            }else if(req_type.equals("sent")){
+
+                                mCurrent_state = "req_sent";
+                                mProfileSendReqBtn.setText("Cancel Friend Request");
+
+                            }
+
+
+                        }
+
+                        mProgressDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
             }
 
             @Override
@@ -136,7 +167,8 @@ public class ProfileActivity extends AppCompatActivity {
 
                                     mProfileSendReqBtn.setEnabled(true);
                                     mCurrent_state = "not_friends";
-                                    mProfileSendReqBtn.setText("Send Frient Request");
+                                    mProfileSendReqBtn.setText("Send Friend Request");
+                                    
                                 }
                             });
                         }
