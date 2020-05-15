@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
@@ -97,11 +98,16 @@ public class RegisterActivity extends AppCompatActivity {
                     String Uid = currentUser.getUid();
 
                     mDatabaseReference = database.getReference().child("Users").child(Uid);
+
+                    String deviceToken = FirebaseInstanceId.getInstance().getToken();
+
+
                     HashMap<String, String> userMap = new HashMap<>();
                     userMap.put("name", displayName);
                     userMap.put("status", "Hi there I'm using Connect!");
                     userMap.put("image", "default");
                     userMap.put("thumb_image", "default");
+                    userMap.put("device_token",deviceToken);
 
                     mDatabaseReference.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
