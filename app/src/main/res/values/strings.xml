@@ -15,4 +15,6 @@
     <string name="account_settings">Account Settings</string>
     <string name="all_users">All Users</string>
     <string name="send_friend_request">Send Friend Request</string>
+    <string name="channel_name">Channel 1</string>
+    <string name="channel_description">Channerl Decription 1</string>
 </resources>
