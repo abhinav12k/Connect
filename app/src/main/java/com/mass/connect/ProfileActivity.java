@@ -333,5 +333,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mRootRef.child("Users").child(mCurrent_user.getUid()).child("online").setValue(true);
+    }
 }
