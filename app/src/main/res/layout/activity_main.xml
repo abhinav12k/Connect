@@ -10,19 +10,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/app_bar_layout" android:id="@+id/main_page_toolbar"></include>
+        <include
+            android:id="@+id/main_page_toolbar"
+            layout="@layout/app_bar_layout"></include>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/main_tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
+            android:layout_height="wrap_content"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/tab_pager"
         android:layout_width="match_parent"
-        android:layout_height="698dp"
+        android:layout_height="649dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="0dp"></androidx.viewpager.widget.ViewPager>
 
