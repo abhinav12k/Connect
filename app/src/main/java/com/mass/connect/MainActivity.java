@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout = findViewById(R.id.main_tabs);
         mTabLayout.setupWithViewPager(mviewPager);
 
-        mToolbar =findViewById(R.id.main_page_toolbar);
+        mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Connect!");
 
@@ -51,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if(currentUser==null){
+        if (currentUser == null) {
             sendToStart();
-        }else{
+        } else {
             mUserRef.child("online").setValue(true);
         }
     }
@@ -61,11 +62,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        mUserRef.child("online").setValue(false);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null)
+            mUserRef.child("online").setValue(false);
     }
 
     private void sendToStart() {
-        Intent startIntent = new Intent(MainActivity.this,StartActivity.class);
+        Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
         startActivity(startIntent);
         finish();
     }
@@ -73,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
@@ -81,18 +85,18 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
 
-        if(item.getItemId()==R.id.main_logout_btn){
+        if (item.getItemId() == R.id.main_logout_btn) {
             FirebaseAuth.getInstance().signOut();
             sendToStart();
         }
 
-        if(item.getItemId()==R.id.setting_btn){
-            Intent settingsIntent = new Intent(MainActivity.this,SettingsActivity.class);
+        if (item.getItemId() == R.id.setting_btn) {
+            Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(settingsIntent);
         }
 
-        if(item.getItemId()==R.id.all_users_btn){
-            Intent allUsersIntent = new Intent(MainActivity.this,UsersActivity.class);
+        if (item.getItemId() == R.id.all_users_btn) {
+            Intent allUsersIntent = new Intent(MainActivity.this, UsersActivity.class);
             startActivity(allUsersIntent);
         }
 

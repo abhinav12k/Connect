@@ -1,8 +1,11 @@
 package com.mass.connect;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -82,7 +85,7 @@ public class FriendsFragment extends Fragment {
             protected void onBindViewHolder(@NonNull final FriendsViewHolder holder, int position, @NonNull Friends friends) {
 //                holder.setDate(friends.getDate());
 
-                String list_user_id = getRef(position).getKey();
+                final String list_user_id = getRef(position).getKey();
 
                 mUsersDatabase.child(list_user_id).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -99,6 +102,36 @@ public class FriendsFragment extends Fragment {
                         holder.setName(profileName);
                         holder.setStatus(userStatus);
                         holder.setUserImage(userThumbImage);
+
+
+                        holder.mView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                CharSequence options[] = new CharSequence[]{"Open Profile","Send Message"};
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                                builder.setTitle("Select Options");
+                                builder.setItems(options, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        //on open proile click
+                                        if(which==0) {
+                                            Intent profileIntent = new Intent(getContext(), ProfileActivity.class);
+                                            profileIntent.putExtra("user_id", list_user_id);
+                                            startActivity(profileIntent);
+                                        }else if(which==1){
+//                                            Intent chatIntent = new Intent(getContext(),ChatActivity.class);
+//                                            chatIntent.putExtra("user_id",list_user_id);
+//                                            startActivity(chatIntent);
+                                        }
+                                    }
+                                });
+                                builder.show();
+                            }
+                        });
+
 
                     }
 
