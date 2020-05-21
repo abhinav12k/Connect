@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +76,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //implementing custom toolbar design inside our app bar
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View action_bar_view = inflater.inflate(R.layout.chat_custom_bar,null);
+        View action_bar_view = inflater.inflate(R.layout.chat_custom_bar, null);
 
         actionBar.setCustomView(action_bar_view);
 
@@ -83,6 +84,11 @@ public class ChatActivity extends AppCompatActivity {
         mTitleView = findViewById(R.id.chat_display_name);
         mLastSeen = findViewById(R.id.chat_last_seen);
         mProfileImage = findViewById(R.id.chat_custom_bar_image);
+
+        //setting up Ids for image and edit texts
+        mPlusBtn = findViewById(R.id.chat_addBtn);
+        mSendBtn = findViewById(R.id.chat_sendBtn);
+        mMessage = findViewById(R.id.chat_messageBox);
 
         mTitleView.setText(mChatUserName);
 
@@ -93,19 +99,19 @@ public class ChatActivity extends AppCompatActivity {
                 String online = dataSnapshot.child("online").getValue().toString();
                 String image = dataSnapshot.child("image").getValue().toString();
 
-                if(online.equals("true")){
+                if (online.equals("true")) {
                     mLastSeen.setText("Online");
-                }else{
+                } else {
                     getTimeAgo GetTimeAgo = new getTimeAgo();
                     long lastTime = Long.parseLong(online);
-                    String lastSeenTime = GetTimeAgo.getTimeAgo(lastTime,getApplicationContext());
+                    String lastSeenTime = GetTimeAgo.getTimeAgo(lastTime, getApplicationContext());
                     mLastSeen.setText(lastSeenTime);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.i("Chat_activity",databaseError.getMessage());
+                Log.i("Chat_activity", databaseError.getMessage());
             }
         });
 
@@ -114,20 +120,22 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if(!dataSnapshot.hasChild(mChatUser)){
+                if (!dataSnapshot.hasChild(mChatUser)) {
 
                     Map chatAddMap = new HashMap();
-                    chatAddMap.put("seem",false);
+                    chatAddMap.put("seem", false);
                     chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
 
                     Map chatUserMap = new HashMap();
-                    chatUserMap.put("Chat/"+mCurrentUserId+"/"+mChatUser,chatAddMap);
-                    chatUserMap.put("Chat/"+mChatUser+"/"+mCurrentUserId,chatAddMap);
+                    chatUserMap.put("Chat/" + mCurrentUserId + "/" + mChatUser, chatAddMap);
+                    chatUserMap.put("Chat/" + mChatUser + "/" + mCurrentUserId, chatAddMap);
 
                     rootRef.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                            Log.i("CHAT_LOG",databaseError.getMessage());
+
+                            if (databaseError != null)
+                                Log.i("CHAT_LOG", databaseError.getMessage());
                         }
                     });
 
@@ -141,6 +149,52 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        //Adding onClick method for send button
+        mSendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                sendMessage();
+
+            }
+        });
+
+
+    }
+
+    private void sendMessage() {
+
+        String message = mMessage.getText().toString();
+
+        if (!TextUtils.isEmpty(message)) {
+
+            String mCurrent_user_ref = "messages/" + mCurrentUserId + "/" + mChatUser;
+            String mChat_user_ref = "messages/" + mChatUser + "/" + mCurrentUserId;
+
+            DatabaseReference user_message_push = rootRef.child("messages").child(mCurrentUserId).child(mChatUser).push();
+
+            String push_id = user_message_push.getKey();
+
+            Map messageMap = new HashMap();
+            messageMap.put("message", message);
+            messageMap.put("seen", false);
+            messageMap.put("type", "text");
+            messageMap.put("time", ServerValue.TIMESTAMP);
+
+            Map messageUserMap = new HashMap();
+            messageUserMap.put(mCurrent_user_ref + "/" + push_id, messageMap);
+            messageUserMap.put(mChat_user_ref + "/" + push_id, messageMap);
+
+            rootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+
+                    if (databaseError != null)
+                        Log.i("CHAT_LOG", databaseError.getMessage());
+                }
+            });
+
+        }
 
     }
 }
