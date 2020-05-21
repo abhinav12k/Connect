@@ -91,12 +91,12 @@ public class FriendsFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        String profileName = dataSnapshot.child("name").getValue().toString();
+                        final String profileName = dataSnapshot.child("name").getValue().toString();
                         String userThumbImage = dataSnapshot.child("thumb_image").getValue().toString();
                         String userStatus = dataSnapshot.child("status").getValue().toString();
 
                         if(dataSnapshot.hasChild("online")) {
-                            Boolean userOnline = (Boolean) dataSnapshot.child("online").getValue();
+                            String userOnline = dataSnapshot.child("online").getValue().toString();
                             holder.setUserOnline(userOnline);
                         }
                         holder.setName(profileName);
@@ -122,9 +122,10 @@ public class FriendsFragment extends Fragment {
                                             profileIntent.putExtra("user_id", list_user_id);
                                             startActivity(profileIntent);
                                         }else if(which==1){
-//                                            Intent chatIntent = new Intent(getContext(),ChatActivity.class);
-//                                            chatIntent.putExtra("user_id",list_user_id);
-//                                            startActivity(chatIntent);
+                                            Intent chatIntent = new Intent(getContext(),ChatActivity.class);
+                                            chatIntent.putExtra("user_id",list_user_id);
+                                            chatIntent.putExtra("name",profileName);
+                                            startActivity(chatIntent);
                                         }
                                     }
                                 });
@@ -183,9 +184,9 @@ public class FriendsFragment extends Fragment {
             Picasso.get().load(thumb_image).placeholder(R.drawable.default_avatar).into(user_profilePic);
         }
 
-        public void setUserOnline(Boolean isOnline){
+        public void setUserOnline(String isOnline){
             ImageView onlineImage = mView.findViewById(R.id.user_single_online_image);
-            if(isOnline){
+            if(isOnline.equals("true")){
                 onlineImage.setVisibility(View.VISIBLE);
             }else{
                 onlineImage.setVisibility(View.INVISIBLE);
