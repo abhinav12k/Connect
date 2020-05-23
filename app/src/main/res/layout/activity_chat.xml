@@ -11,6 +11,13 @@
         android:id="@+id/chat_toolbar"
         layout="@layout/app_bar_layout" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messages_List"
+        android:layout_width="match_parent"
+        android:layout_height="775dp"
+        android:layout_below="@+id/chat_toolbar"
+        android:layout_marginTop="0dp"></androidx.recyclerview.widget.RecyclerView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
