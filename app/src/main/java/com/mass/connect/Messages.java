@@ -8,7 +8,7 @@ public class Messages {
     private String message,type;
     private boolean seen;
     private long time;
-
+    private String from;
 
     public Messages(String message, String type, boolean seen, long time){
 
@@ -19,8 +19,21 @@ public class Messages {
 
     }
 
-    Messages(){
+    public String getFrom() {
+        return from;
+    }
 
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public Messages(){
+
+    }
+
+    public Messages(String from){
+
+        this.from = from;
     }
 
     public String getMessage() {
@@ -54,8 +67,5 @@ public class Messages {
     public void setTime(long time) {
         this.time = time;
     }
-
-
-
 
 }
