@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
@@ -62,6 +64,11 @@ public class ChatActivity extends AppCompatActivity {
     private List<Messages> messagesList = new ArrayList<>();
     private LinearLayoutManager mLinearLayout;
     private MessageAdapter mAdapter;
+    private SwipeRefreshLayout mRefreshLayout;
+
+    //Amount of messages to load
+    private static final int TOTAL_MESSAGES_TO_LOAD = 10;
+    private int mCurrentPage = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +111,7 @@ public class ChatActivity extends AppCompatActivity {
         //setting up messages list recycler view
 
         mAdapter = new MessageAdapter(messagesList);
+        mRefreshLayout = findViewById(R.id.swipe_message_list);
 
         mMessagesList = findViewById(R.id.messages_List);
         mLinearLayout = new LinearLayoutManager(this);
@@ -182,12 +190,25 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                mCurrentPage++;
+                messagesList.clear();
+                loadMessages();
+            }
+        });
+
 
     }
 
     private void loadMessages() {
 
-        rootRef.child("messages").child(mCurrentUserId).child(mChatUser).addChildEventListener(new ChildEventListener() {
+        DatabaseReference messageRef = rootRef.child("messages").child(mCurrentUserId).child(mChatUser);
+        Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_MESSAGES_TO_LOAD);
+
+        messageQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
@@ -195,6 +216,9 @@ public class ChatActivity extends AppCompatActivity {
                 messagesList.add(message);
                 mAdapter.notifyDataSetChanged();
 
+                mMessagesList.scrollToPosition(messagesList.size() - 1);
+
+                mRefreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -238,7 +262,7 @@ public class ChatActivity extends AppCompatActivity {
             messageMap.put("seen", false);
             messageMap.put("type", "text");
             messageMap.put("time", ServerValue.TIMESTAMP);
-            messageMap.put("from",mCurrentUserId);
+            messageMap.put("from", mCurrentUserId);
 
             Map messageUserMap = new HashMap();
             messageUserMap.put(mCurrent_user_ref + "/" + push_id, messageMap);
