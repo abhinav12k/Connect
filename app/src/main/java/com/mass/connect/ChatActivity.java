@@ -70,7 +70,7 @@ public class ChatActivity extends AppCompatActivity {
     private static final int TOTAL_MESSAGES_TO_LOAD = 10;
     private int mCurrentPage = 1;
 
-    private int itemPos =0;
+    private int itemPos = 0;
     private String mPrevKey = "";
     private String mLastKey = "";
 
@@ -198,6 +198,8 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
 
+                mCurrentPage++;
+                itemPos = 0;
                 loadMoreMessages();
             }
         });
@@ -205,7 +207,7 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private void loadMoreMessages(){
+    private void loadMoreMessages() {
 
         DatabaseReference messageRef = rootRef.child("messages").child(mCurrentUserId).child(mChatUser);
         Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(mCurrentPage * TOTAL_MESSAGES_TO_LOAD);
@@ -216,24 +218,23 @@ public class ChatActivity extends AppCompatActivity {
                 Messages message = dataSnapshot.getValue(Messages.class);
                 String messageKey = dataSnapshot.getKey();
 
-                if(!mPrevKey.equals(messageKey)){
-                    messagesList.add(itemPos,message);
+                if (!mPrevKey.equals(messageKey)) {
+                    messagesList.add(itemPos, message);
 
-                }else{
+                } else {
                     mPrevKey = mLastKey;
                 }
 
-                if(itemPos==1){
+                if (itemPos == 1) {
                     mLastKey = messageKey;
                 }
 
 
-
-                Log.d("Total keys","Last key: "+mLastKey+" Prev key: "+mPrevKey+" Message key: "+messageKey);
+                Log.d("Total keys", "Last key: " + mLastKey + " Prev key: " + mPrevKey + " Message key: " + messageKey);
 
                 mAdapter.notifyDataSetChanged();
                 mRefreshLayout.setRefreshing(false);
-                mLinearLayout.scrollToPositionWithOffset(10,0);
+                mLinearLayout.scrollToPositionWithOffset(itemPos, 0);
 
             }
 
@@ -262,7 +263,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
     private void loadMessages() {
 
         DatabaseReference messageRef = rootRef.child("messages").child(mCurrentUserId).child(mChatUser);
@@ -276,7 +276,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 itemPos++;
 
-                if(itemPos==1){
+                if (itemPos == 1) {
 
                     String messageKey = dataSnapshot.getKey();
                     mLastKey = messageKey;
@@ -290,7 +290,6 @@ public class ChatActivity extends AppCompatActivity {
                 mMessagesList.scrollToPosition(messagesList.size() - 1);
 
                 mRefreshLayout.setRefreshing(false);
-
 
 
             }
