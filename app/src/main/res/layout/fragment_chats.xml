@@ -5,10 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".ChatsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chats_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="This is chats fragment" />
-
+        android:layout_height="match_parent" />
 </FrameLayout>
